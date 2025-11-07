@@ -92,17 +92,45 @@ int main(void) {
     while(1) {
         switch(_state) {
             case STATE_OFF:
-                Idle();
+                while(_state == STATE_OFF) {
+                    Idle();
+                    delay_ms(50);
+                    if (CN_event) {
+                        uint16_t IO_event = IOcheck();
+                        if (IO_event == 1) {
+                            _state = STATE_ON_LED1;
+                        }
+                        else if (IO_event == 2) {
+                            _state = STATE_ON_LED2;
+                        }
+                        CN_event = 0;
+                    }
+                }
                 break;
             case STATE_ON_LED1:
+                while(_state == STATE_ON_LED1) {
+                    
+                }
                 break;
             case STATE_ON_LED2:
+                while(_state == STATE_ON_LED2) {
+                    
+                }
                 break;
             case STATE_ON_BLINKING:
+                while(_state == STATE_ON_BLINKING) {
+                    
+                }
                 break;
             case STATE_OFF_BLINKING:
+                while(_state == STATE_OFF_BLINKING) {
+                    
+                }
                 break;
             case STATE_ON_TRANSMIT:
+                while(_state == STATE_ON_TRANSMIT) {
+                    
+                }
                 break;
         }
     }

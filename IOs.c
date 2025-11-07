@@ -9,6 +9,7 @@
 #include "IOs.h"
 
 state_t _state;
+uint16_t curLED = 0;
 
 // Initialize peripheral IO
 void IOinit() {
@@ -40,7 +41,10 @@ uint16_t IOcheck() {
     if (_state == STATE_OFF) {
         // PB1 pressed returns event 1
         if (PORTBbits.RB7 == 0 && PORTBbits.RB4 == 1 && PORTAbits.RA4 == 1) {
-            return 1;
+            if (curLED == 0)
+                return 1;
+            else if (curLED == 1)
+                return 2;
         }
     }
     
