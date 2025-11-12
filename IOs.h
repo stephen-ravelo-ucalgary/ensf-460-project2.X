@@ -24,6 +24,7 @@ typedef enum {
 } state_t;
 
 extern state_t _state;
+extern uint16_t _IO_finished;
 
 void IOinit();
 uint16_t IOcheck();

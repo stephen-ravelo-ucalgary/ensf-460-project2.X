@@ -109,12 +109,39 @@ int main(void) {
                 break;
             case STATE_ON_LED1:
                 while(_state == STATE_ON_LED1) {
-                    
+                    _LATB9 ^= 1;
+                    delay_ms(500);
+                    if (CN_event) {
+                        uint16_t IO_event = IOcheck();
+                        if (IO_event == 1) {
+                            _state = STATE_OFF;
+                            _LATB9 = 0;
+                        }
+                        else if (IO_event == 2) {
+                            _state = STATE_ON_LED2;
+                            _LATB9 = 0;
+                        }
+                        CN_event = 0;
+                    }
                 }
                 break;
             case STATE_ON_LED2:
                 while(_state == STATE_ON_LED2) {
-                    
+                    _LATA6 ^= 1;
+                    delay_ms(500);
+                    if (CN_event) {
+                        uint16_t IO_event = IOcheck();
+                        if (IO_event == 1) {
+                            _state = STATE_OFF;
+                            _LATA6 = 0;
+                        }
+                        else if (IO_event == 2) {
+                            _state = STATE_ON_LED1;
+                            _LATA6 = 0;
+                            
+                        }
+                        CN_event = 0;
+                    }
                 }
                 break;
             case STATE_ON_BLINKING:
@@ -137,7 +164,6 @@ int main(void) {
     
     return 0;
 }
-
 
 // Timer 2 interrupt subroutine
 void __attribute__((interrupt, no_auto_psv)) _T2Interrupt(void) 
