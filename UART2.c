@@ -227,7 +227,8 @@ void DispMode0(uint16_t x) {
     Disp2String("\033[2J\033[1;1HMode 0: ");
     XmitUART2('*', x / 32 + 1);
     XmitUART2(' ', 1);
-    Disp2Hex(x);
+    //Disp2Hex(x);
+    Disp2Dec(x);
     XmitUART2('\n', 1);
     
     return;

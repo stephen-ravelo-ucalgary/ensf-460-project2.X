@@ -6,12 +6,12 @@
  * Submission Date: November 7, 2025
  */
 
-#ifndef ADC_H
-#define	ADC_H
+#ifndef brightness_H
+#define	brightness_H
 
-#include "UART2.h"
+#include "ADC.h"
+#include "IOs.h"
 
-uint16_t do_ADC(void);
-void read_ADC();
+void setBrightness(uint16_t dutyC);
 
-#endif	/* ADC_H */
+#endif	/* brightness_H */

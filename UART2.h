@@ -9,15 +9,10 @@
 #ifndef UART2_H
 #define	UART2_H
 
+#include <stdint.h>
+
 #ifdef	__cplusplus
 extern "C" {
-#endif
-
-
-
-
-#ifdef	__cplusplus
-}
 #endif
 
 void InitUART2(void);
@@ -33,5 +28,8 @@ void Disp2Dec(unsigned int);
 
 void DispMode0(uint16_t x);
 
-#endif	/* UART2_H */
+#ifdef	__cplusplus
+}
+#endif
 
+#endif	/* UART2_H */

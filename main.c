@@ -53,11 +53,11 @@
 #include <xc.h>
 #include <p24F16KA101.h>
 #include "clkChange.h"
-#include "UART2.h"
+#include "UART2.h" 
 #include "ADC.h"
 #include "IOs.h"
 #include "timer.h"
-
+#include "brightness.h"
 /**
  * You might find it useful to add your own #defines to improve readability here
  */
@@ -109,8 +109,14 @@ int main(void) {
                 break;
             case STATE_ON_LED1:
                 while(_state == STATE_ON_LED1) {
-                    _LATB9 ^= 1;
-                    delay_ms(500);
+
+                    ADC1_val = do_ADC();
+                    if (ADC1_val != ADC1_last) {
+                        DispMode0(ADC1_val);
+                    }
+                    
+                    ADC1_last = ADC1_val;
+                    setBrightness(ADC1_val);
                     if (CN_event) {
                         uint16_t IO_event = IOcheck();
                         if (IO_event == 1) {
@@ -127,8 +133,10 @@ int main(void) {
                 break;
             case STATE_ON_LED2:
                 while(_state == STATE_ON_LED2) {
-                    _LATA6 ^= 1;
-                    delay_ms(500);
+                    //_LATA6 ^= 1;
+                    //do_ADC 
+                   //call brightness function and send the value returned by the ADC function.
+                    delay_ms(500);//keep the LED stable before reading the potentiometer value again
                     if (CN_event) {
                         uint16_t IO_event = IOcheck();
                         if (IO_event == 1) {
@@ -179,6 +187,5 @@ void __attribute__((interrupt, no_auto_psv)) _T2Interrupt(void)
 void __attribute__((interrupt, no_auto_psv)) _CNInterrupt(void){
     //Don't forget to clear the CN interrupt flag!
     IFS1bits.CNIF = 0;
-    
     CN_event = 1;
 }
