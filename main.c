@@ -63,7 +63,6 @@
  */
 
 uint16_t CN_event;
-uint16_t toggle_transmit;
 
 int main(void) {
     
@@ -94,6 +93,7 @@ int main(void) {
     while(1) {
         switch(_state) {
             case STATE_OFF:
+                T3CONbits.TON ^= 0;
                 while(_state == STATE_OFF) {
                     Idle();
                     delay_ms(50);
@@ -136,7 +136,7 @@ int main(void) {
                             _LATB9 = 0;
                         }
                         else if (_PB3_short) {
-                            toggle_transmit ^= 1;
+                            T3CONbits.TON ^= 1;
                         }
                         IOclear();
                         CN_event = 0;
@@ -163,7 +163,7 @@ int main(void) {
                             _LATA6 = 0;
                         }
                         else if (_PB3_short) {
-                            toggle_transmit ^= 1;
+                            T3CONbits.TON ^= 1;
                         }
                         IOclear();
                         CN_event = 0;
@@ -190,7 +190,7 @@ int main(void) {
                             _LATB9 = 0;
                         }
                         else if (_PB3_short) {
-                            toggle_transmit ^= 1;
+                            T3CONbits.TON ^= 1;
                         }
                         IOclear();
                         CN_event = 0;
@@ -217,7 +217,7 @@ int main(void) {
                             _LATA6 = 0;
                         }
                         else if (_PB3_short) {
-                            toggle_transmit ^= 1;
+                            T3CONbits.TON ^= 1;
                         }
                         IOclear();
                         CN_event = 0;
@@ -261,15 +261,8 @@ int main(void) {
                     }
                 }
                 break;
-            
         }
-        
-        if (toggle_transmit) {
-            // TODO: Add transmitting UART
-
-        }
-    }
-        
+    }       
     
     return 0;
 }
@@ -279,6 +272,13 @@ void __attribute__((interrupt, no_auto_psv)) _T2Interrupt(void)
 {
     IFS0bits.T2IF = 0;
     T2CONbits.TON = 0;
+}
+
+// Timer 3 interrupt subroutine
+void __attribute__((interrupt, no_auto_psv)) _T3Interrupt(void) 
+{
+    IFS0bits.T3IF = 0;
+    _T3_flag = 1;
 }
 
 /*

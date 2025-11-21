@@ -14,6 +14,8 @@
 
 extern uint16_t _skip_delay;
 
+extern uint16_t _T3_flag;
+
 void timerInit();
 void delay_ms();
 
