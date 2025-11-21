@@ -18,14 +18,26 @@ typedef enum {
     STATE_OFF,
     STATE_ON_LED1,     
     STATE_ON_LED2,     
-    STATE_ON_BLINKING,     
-    STATE_OFF_BLINKING,     
-    STATE_ON_TRANSMIT        
+    STATE_ON_BLINKING_LED1,     
+    STATE_ON_BLINKING_LED2,     
+    STATE_OFF_BLINKING_LED1,     
+    STATE_OFF_BLINKING_LED2
 } state_t;
 
 extern state_t _state;
 
+extern uint16_t _IO_finished;
+
+extern uint16_t _PB1_short;
+extern uint16_t _PB1_long;
+extern uint16_t _PB2_short;
+extern uint16_t _PB3_short;
+
+extern uint16_t _curLED;
+
 void IOinit();
-uint16_t IOcheck();
+void IOcheck();
+void IOclear();
+uint16_t check_IO_finished();
 
 #endif
