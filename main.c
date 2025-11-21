@@ -127,7 +127,7 @@ int main(void) {
                             _state = STATE_ON_LED2;
                             _LATB9 = 0;
                         }
-                        if (_PB1_short) {
+                        else if (_PB1_short) {
                             _state = STATE_OFF;
                             _LATB9 = 0;
                         }
@@ -154,7 +154,7 @@ int main(void) {
                             _state = STATE_ON_LED1;
                             _LATA6 = 0;
                         }
-                        if (_PB1_short) {
+                        else if (_PB1_short) {
                             _state = STATE_OFF;
                             _LATA6 = 0;
                         }
@@ -181,7 +181,7 @@ int main(void) {
                             _state = STATE_ON_BLINKING_LED2;
                             _LATB9 = 0;
                         }
-                        if (_PB1_short) {
+                        else if (_PB1_short) {
                             _state = STATE_OFF;
                             _LATB9 = 0;
                         }
@@ -208,7 +208,7 @@ int main(void) {
                             _state = STATE_ON_BLINKING_LED1;
                             _LATA6 = 0;
                         }
-                        if (_PB1_short) {
+                        else if (_PB1_short) {
                             _state = STATE_OFF;
                             _LATA6 = 0;
                         }
