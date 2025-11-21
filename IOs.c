@@ -11,7 +11,12 @@
 state_t _state;
 uint16_t _IO_finished = 1;
 
-uint16_t curLED = 0;
+uint16_t _PB1_short = 0;
+uint16_t _PB1_long = 0;
+uint16_t _PB2_short = 0;
+uint16_t _PB3_short = 0;
+
+uint16_t _curLED = 0;
 
 // Initialize peripheral IO
 void IOinit() {
@@ -38,36 +43,42 @@ void IOinit() {
 }
 
 // Execute logic for peripheral IO
-uint16_t IOcheck() {
-    if (_state == STATE_OFF) {
-        if (PORTBbits.RB7 == 0 && PORTBbits.RB4 == 1 && PORTAbits.RA4 == 1) {
-            if (curLED == 0)
-                return 1;
-            else if (curLED == 1)
-                return 2;
+void IOcheck() {
+    uint16_t count = 0;
+    if (PORTBbits.RB7 == 0 && PORTBbits.RB4 == 1 && PORTAbits.RA4 == 1) {
+        while (PORTBbits.RB7 == 0 && PORTBbits.RB4 == 1 && PORTAbits.RA4 == 1) {
+            if (count == 60) {
+                _curLED ^= 1;
+                _PB1_long = 1;
+                break;
+            }
+            delay_ms(50);
+            count++;
         }
+
+        if(count < 60) {
+            _PB1_short = 1;
+        }
+
+        count = 0;
     }
-    else if (_state == STATE_ON_LED1 || _state == STATE_ON_LED2) {
-        uint16_t count = 0;
-        if (PORTBbits.RB7 == 0 && PORTBbits.RB4 == 1 && PORTAbits.RA4 == 1) {
-            while (PORTBbits.RB7 == 0 && PORTBbits.RB4 == 1 && PORTAbits.RA4 == 1) {
-                if (count == 60) {
-                    return 2; // TODO: change
-                }
-                delay_ms(50);
-                count++;
-            }
-            
-            if(count < 60) {
-                return 1;
-            }
-            
-            count = 0;
-        }
+    
+    if (PORTBbits.RB7 == 1 && PORTBbits.RB4 == 0 && PORTAbits.RA4 == 1) {
+        _PB2_short = 1;
+    }
+    
+    if (PORTBbits.RB7 == 1 && PORTBbits.RB4 == 1 && PORTAbits.RA4 == 0) {
+        _PB3_short = 1;
     }
     
     _IO_finished = 1;
-    return 0;
+}
+
+void IOclear() {
+    _PB1_short = 0;
+    _PB1_long = 0;
+    _PB2_short = 0;
+    _PB3_short = 0;
 }
 
 uint16_t check_IO_finished() {

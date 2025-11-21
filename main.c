@@ -63,6 +63,7 @@
  */
 
 uint16_t CN_event;
+uint16_t toggle_transmit;
 
 int main(void) {
     
@@ -84,9 +85,10 @@ int main(void) {
     
     _state = STATE_OFF;
     CN_event = 0;
+    toggle_transmit = 0;
     
-    uint16_t ADC1_val = do_ADC();
-    uint16_t ADC1_last = ADC1_val + 16;
+//    uint16_t ADC1_val = do_ADC();
+//    uint16_t ADC1_last = ADC1_val + 16;
     
     // Main loop
     while(1) {
@@ -96,71 +98,178 @@ int main(void) {
                     Idle();
                     delay_ms(50);
                     if (CN_event) {
-                        uint16_t IO_event = IOcheck();
-                        if (IO_event == 1) {
-                            _state = STATE_ON_LED1;
+                        IOcheck();
+                        if (_PB1_short) {
+                            if (_curLED)
+                                _state = STATE_ON_LED2;
+                            else
+                                _state = STATE_ON_LED1;
                         }
-                        else if (IO_event == 2) {
-                            _state = STATE_ON_LED2;
+                        else if (_PB2_short) {
+                            if (_curLED)
+                                _state = STATE_OFF_BLINKING_LED2;
+                            else
+                                _state = STATE_OFF_BLINKING_LED1;
                         }
+                        IOclear();
                         CN_event = 0;
                     }
                 }
                 break;
             case STATE_ON_LED1:
                 while(_state == STATE_ON_LED1) {
-                    _LATB9 ^= 1;
+                    // TODO: add variable brightness
+                    _LATB9 = 1;
                     delay_ms(500);
                     if (CN_event) {
-                        uint16_t IO_event = IOcheck();
-                        if (IO_event == 1) {
-                            _state = STATE_OFF;
-                            _LATB9 = 0;
-                        }
-                        else if (IO_event == 2) {
+                        IOcheck();
+                        if (_PB1_long) {
                             _state = STATE_ON_LED2;
                             _LATB9 = 0;
                         }
+                        if (_PB1_short) {
+                            _state = STATE_OFF;
+                            _LATB9 = 0;
+                        }
+                        else if (_PB2_short) {
+                            _state = STATE_ON_BLINKING_LED1;
+                            _LATB9 = 0;
+                        }
+                        else if (_PB3_short) {
+                            toggle_transmit ^= 1;
+                        }
+                        IOclear();
                         CN_event = 0;
                     }
                 }
                 break;
             case STATE_ON_LED2:
                 while(_state == STATE_ON_LED2) {
-                    _LATA6 ^= 1;
+                    // TODO: add variable brightness
+                    _LATA6 = 1;
                     delay_ms(500);
                     if (CN_event) {
-                        uint16_t IO_event = IOcheck();
-                        if (IO_event == 1) {
+                        IOcheck();
+                        if (_PB1_long) {
+                            _state = STATE_ON_LED1;
+                            _LATA6 = 0;
+                        }
+                        if (_PB1_short) {
                             _state = STATE_OFF;
                             _LATA6 = 0;
                         }
-                        else if (IO_event == 2) {
-                            _state = STATE_ON_LED1;
+                        else if (_PB2_short) {
+                            _state = STATE_ON_BLINKING_LED2;
                             _LATA6 = 0;
-                            
                         }
+                        else if (_PB3_short) {
+                            toggle_transmit ^= 1;
+                        }
+                        IOclear();
                         CN_event = 0;
                     }
                 }
                 break;
-            case STATE_ON_BLINKING:
-                while(_state == STATE_ON_BLINKING) {
-                    
+            case STATE_ON_BLINKING_LED1:
+                while(_state == STATE_ON_BLINKING_LED1) {
+                    // TODO: add variable brightness
+                    _LATB9 ^= 1;
+                    delay_ms(500);
+                    if (CN_event) {
+                        IOcheck();
+                        if (_PB1_long) {
+                            _state = STATE_ON_BLINKING_LED2;
+                            _LATB9 = 0;
+                        }
+                        if (_PB1_short) {
+                            _state = STATE_OFF;
+                            _LATB9 = 0;
+                        }
+                        else if (_PB2_short) {
+                            _state = STATE_ON_LED1;
+                            _LATB9 = 0;
+                        }
+                        else if (_PB3_short) {
+                            toggle_transmit ^= 1;
+                        }
+                        IOclear();
+                        CN_event = 0;
+                    }
                 }
                 break;
-            case STATE_OFF_BLINKING:
-                while(_state == STATE_OFF_BLINKING) {
-                    
+            case STATE_ON_BLINKING_LED2:
+                while(_state == STATE_ON_BLINKING_LED2) {
+                    // TODO: add variable brightness
+                    _LATA6 ^= 1;
+                    delay_ms(500);
+                    if (CN_event) {
+                        IOcheck();
+                        if (_PB1_long) {
+                            _state = STATE_ON_BLINKING_LED1;
+                            _LATA6 = 0;
+                        }
+                        if (_PB1_short) {
+                            _state = STATE_OFF;
+                            _LATA6 = 0;
+                        }
+                        else if (_PB2_short) {
+                            _state = STATE_ON_LED2;
+                            _LATA6 = 0;
+                        }
+                        else if (_PB3_short) {
+                            toggle_transmit ^= 1;
+                        }
+                        IOclear();
+                        CN_event = 0;
+                    }
                 }
                 break;
-            case STATE_ON_TRANSMIT:
-                while(_state == STATE_ON_TRANSMIT) {
-                    
+            case STATE_OFF_BLINKING_LED1:
+                while(_state == STATE_OFF_BLINKING_LED1) {
+                    _LATB9 ^= 1;
+                    delay_ms(500);
+                    if (CN_event) {
+                        IOcheck();
+                        if (_PB1_short) {
+                            _state = STATE_ON_LED1;
+                            _LATB9 = 0;
+                        }
+                        else if (_PB2_short) {
+                            _state = STATE_OFF;
+                            _LATB9 = 0;
+                        }
+                        IOclear();
+                        CN_event = 0;
+                    }
                 }
                 break;
+            case STATE_OFF_BLINKING_LED2:
+                while(_state == STATE_OFF_BLINKING_LED2) {
+                    _LATA6 ^= 1;
+                    delay_ms(500);
+                    if (CN_event) {
+                        if (_PB1_short) {
+                            _state = STATE_ON_LED2;
+                            _LATA6 = 0;
+                        }
+                        else if (_PB2_short) {
+                            _state = STATE_OFF;
+                            _LATA6 = 0;
+                        }
+                        IOclear();
+                        CN_event = 0;
+                    }
+                }
+                break;
+            
+        }
+        
+        if (toggle_transmit) {
+            // TODO: Add transmitting UART
+
         }
     }
+        
     
     return 0;
 }
