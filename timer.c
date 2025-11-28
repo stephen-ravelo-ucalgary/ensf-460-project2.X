@@ -1,9 +1,9 @@
 /*
  * File Name: timer.c
- * Assignment: Assignment 4
+ * Assignment: Project 2
  * Lab Section: B02
  * Completed by: Stephen Ravelo, Aaron Lauang, Alexa Gonzalez
- * Submission Date: November 7, 2025
+ * Submission Date: December 1, 2025
  */
 
 #include "timer.h"
@@ -51,6 +51,7 @@ void delay_ms(uint16_t time_ms) {
         
         if (_T3_flag) {
             // TODO: transmit
+            read_ADC_Intensity();
             _T3_flag = 0;
         }
     }

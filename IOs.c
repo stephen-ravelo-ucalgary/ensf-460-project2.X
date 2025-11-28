@@ -1,9 +1,9 @@
 /*
  * File Name: IOs.c
- * Assignment: Project 1
+ * Assignment: Project 2
  * Lab Section: B02
  * Completed by: Stephen Ravelo, Aaron Lauang, Alexa Gonzalez
- * Submission Date: October 26, 2025
+ * Submission Date: December 1, 2025
  */
 
 #include "IOs.h"

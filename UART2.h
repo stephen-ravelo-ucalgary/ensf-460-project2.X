@@ -1,9 +1,9 @@
 /*
  * File Name: UART2.h
- * Assignment: Assignment 4
+ * Assignment: Project 2
  * Lab Section: B02
  * Completed by: Stephen Ravelo, Aaron Lauang, Alexa Gonzalez
- * Submission Date: November 7, 2025
+ * Submission Date: December 1, 2025
  */
 
 #ifndef UART2_H
@@ -30,8 +30,6 @@ void Disp2Hex(unsigned int);
 void Disp2Hex32(unsigned long int);
 void Disp2String(char*);
 void Disp2Dec(unsigned int);
-
-void DispMode0(uint16_t x);
 
 #endif	/* UART2_H */
 

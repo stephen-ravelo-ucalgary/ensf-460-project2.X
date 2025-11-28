@@ -1,9 +1,9 @@
 /*
  * File Name: main.c
- * Assignment: Assignment 4
+ * Assignment: Project 2
  * Lab Section: B02
  * Completed by: Stephen Ravelo, Aaron Lauang, Alexa Gonzalez
- * Submission Date: November 7, 2025
+ * Submission Date: December 1, 2025
  */
 
 // FBS
@@ -92,7 +92,7 @@ int main(void) {
     while(1) {
         switch(_state) {
             case STATE_OFF:
-                T3CONbits.TON ^= 0;
+                T3CONbits.TON = 0;
                 while(_state == STATE_OFF) {
                     Idle();
                     delay_ms(50);
@@ -136,14 +136,21 @@ int main(void) {
                             _LATB9 = 0;
                         }
                         else if (_PB3_short) {
-                            T3CONbits.TON ^= 1;
+                            if(T3CONbits.TON == 1) {
+                                Disp2String("STOP_READING\n");
+                                T3CONbits.TON ^= 1;
+                            }
+                            else {
+                                Disp2String("START_READING\n");
+                                T3CONbits.TON ^= 1;
+                            }
                         }
                         IOclear();
                         CN_event = 0;
                     }
                     
                     if (_T3_flag) {
-                        // TODO: transmit
+                        read_ADC_Intensity();
                         _T3_flag = 0;
                     }
                 }
@@ -169,14 +176,21 @@ int main(void) {
                             _LATA6 = 0;
                         }
                         else if (_PB3_short) {
-                            T3CONbits.TON ^= 1;
+                            if(T3CONbits.TON == 1) {
+                                Disp2String("STOP_READING\n");
+                                T3CONbits.TON ^= 1;
+                            }
+                            else {
+                                Disp2String("START_READING\n");
+                                T3CONbits.TON ^= 1;
+                            }
                         }
                         IOclear();
                         CN_event = 0;
                     }
                     
                     if (_T3_flag) {
-                        // TODO: transmit
+                        read_ADC_Intensity();
                         _T3_flag = 0;
                     }
                 }
@@ -201,7 +215,14 @@ int main(void) {
                             _LATB9 = 0;
                         }
                         else if (_PB3_short) {
-                            T3CONbits.TON ^= 1;
+                            if(T3CONbits.TON == 1) {
+                                Disp2String("STOP_READING\n");
+                                T3CONbits.TON ^= 1;
+                            }
+                            else {
+                                Disp2String("START_READING\n");
+                                T3CONbits.TON ^= 1;
+                            }
                         }
                         IOclear();
                         CN_event = 0;
@@ -228,7 +249,14 @@ int main(void) {
                             _LATA6 = 0;
                         }
                         else if (_PB3_short) {
-                            T3CONbits.TON ^= 1;
+                            if(T3CONbits.TON == 1) {
+                                Disp2String("STOP_READING\n");
+                                T3CONbits.TON ^= 1;
+                            }
+                            else {
+                                Disp2String("START_READING\n");
+                                T3CONbits.TON ^= 1;
+                            }
                         }
                         IOclear();
                         CN_event = 0;
