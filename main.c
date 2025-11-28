@@ -84,7 +84,6 @@ int main(void) {
     
     _state = STATE_OFF;
     CN_event = 0;
-    toggle_transmit = 0;
     
 //    uint16_t ADC1_val = do_ADC();
 //    uint16_t ADC1_last = ADC1_val + 16;
@@ -120,7 +119,8 @@ int main(void) {
                 while(_state == STATE_ON_LED1) {
                     // TODO: add variable brightness
                     _LATB9 = 1;
-                    delay_ms(500);
+                    Idle();
+                    delay_ms(50);
                     if (CN_event) {
                         IOcheck();
                         if (_PB1_long) {
@@ -141,13 +141,19 @@ int main(void) {
                         IOclear();
                         CN_event = 0;
                     }
+                    
+                    if (_T3_flag) {
+                        // TODO: transmit
+                        _T3_flag = 0;
+                    }
                 }
                 break;
             case STATE_ON_LED2:
                 while(_state == STATE_ON_LED2) {
                     // TODO: add variable brightness
                     _LATA6 = 1;
-                    delay_ms(500);
+                    Idle();
+                    delay_ms(50);
                     if (CN_event) {
                         IOcheck();
                         if (_PB1_long) {
@@ -167,6 +173,11 @@ int main(void) {
                         }
                         IOclear();
                         CN_event = 0;
+                    }
+                    
+                    if (_T3_flag) {
+                        // TODO: transmit
+                        _T3_flag = 0;
                     }
                 }
                 break;
