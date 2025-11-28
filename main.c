@@ -92,7 +92,7 @@ int main(void) {
     while(1) {
         switch(_state) {
             case STATE_OFF:
-                T3CONbits.TON ^= 0;
+                T3CONbits.TON = 0;
                 while(_state == STATE_OFF) {
                     Idle();
                     delay_ms(50);
