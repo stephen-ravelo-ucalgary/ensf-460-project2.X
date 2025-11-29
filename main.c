@@ -89,13 +89,16 @@ int main(void) {
     InitUART2();
     
     _state = STATE_OFF;
+    CN_event = 0;
+    
+//    uint16_t ADC1_val = do_ADC();
+//    uint16_t ADC1_last = ADC1_val + 16;
     
     // Main loop
     while(1) {
         switch(_state) {
             case STATE_OFF:
-                T3CONbits.TON ^= 0;
-                Disp2String("STATE OFF\n");
+                T3CONbits.TON = 0;
                 while(_state == STATE_OFF) {
                     Idle();
                     delay_ms(50);
@@ -144,6 +147,11 @@ int main(void) {
                         IOclear();
                         CN_event = 0;
                     }
+                    
+                    if (_T3_flag) {
+                        // TODO: transmit
+                        _T3_flag = 0;
+                    }
                 }
                 break;
             case STATE_ON_LED2:
@@ -171,6 +179,11 @@ int main(void) {
                         }
                         IOclear();
                         CN_event = 0;
+                    }
+                    
+                    if (_T3_flag) {
+                        // TODO: transmit
+                        _T3_flag = 0;
                     }
                 }
                 break;
