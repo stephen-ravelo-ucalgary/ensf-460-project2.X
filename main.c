@@ -63,7 +63,7 @@
  * You might find it useful to add your own #defines to improve readability here
  */
 
-uint16_t CN_event;
+volatile uint16_t CN_event = 0;
 volatile uint16_t adc_value = 0;
 volatile uint8_t adc_changed = 1;
 volatile uint8_t curLED = 0;
@@ -88,7 +88,6 @@ int main(void) {
     InitUART2();
     
     _state = STATE_OFF;
-    CN_event = 0;
     
     // Main loop
     while(1) {
@@ -120,13 +119,15 @@ int main(void) {
                 break;
             case STATE_ON_LED1:
                 Disp2String("STATE ON LED1\n");
+                curLED = 0;
+                adc_changed = 1; //enable brightness
                 while(_state == STATE_ON_LED1) {
                     // TODO: add variable brightness
                     do_ADC();
                     if (adc_changed) {
                         setBrightness();
                     }
-                    adc_changed = 0;
+                    adc_changed = 0; //reset flag
                     //Disp2String("Main\n");
                     
                     if (CN_event) {
@@ -153,12 +154,15 @@ int main(void) {
                 break;
             case STATE_ON_LED2:
                 Disp2String("STATE ON LED2\n");
+                curLED = 1;
+                adc_changed = 1; //enable brightness
                 while(_state == STATE_ON_LED2) {
                     // TODO: add variable brightness
                     do_ADC();
                     if (adc_changed) {
                         setBrightness();
                     }
+                    adc_changed = 0;
                     if (CN_event) {
                         IOcheck();
                         if (_PB1_long) {

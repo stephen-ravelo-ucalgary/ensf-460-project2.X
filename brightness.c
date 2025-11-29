@@ -16,7 +16,9 @@ void setBrightness(void) {
     adc_changed = 0;   // clean flag
     uint16_t dutyC_ms = (uint16_t)((adc_value * 25) / 1024);
     
-    while(!adc_changed){ //no adc value update
+    while(!adc_changed && !CN_event){ //no adc value update
+        //Disp2String("CN event: \n");
+        //Disp2Dec(CN_event);
         do_ADC();
         if (dutyC_ms > 0) {
             if(curLED == 0)

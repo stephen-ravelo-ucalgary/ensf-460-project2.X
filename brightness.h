@@ -12,6 +12,7 @@
 #include <stdint.h>
 
 // global variables
+extern volatile uint16_t CN_event;
 extern volatile uint16_t adc_value;
 extern volatile uint8_t adc_changed;
 extern volatile uint8_t curLED;
