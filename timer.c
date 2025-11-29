@@ -47,7 +47,7 @@ void timerInit() {
     T3CONbits.TON = 0;
 }
 
-/*void delay_ms(uint16_t time_ms) {
+void delay_ms(uint16_t time_ms) {
     PR2 = 1 * time_ms;      // PR2 coefficient: 1 ~= 0.001 * 250000 / 256
     TMR2 = 0;
     
@@ -67,7 +67,7 @@ void timerInit() {
     }
     
     return;
-}*/
+}
 
 void delay_ms_T1(uint16_t time_ms) {
     PR1 = 1 * time_ms;      // PR1 coefficient: 1 ~= 0.001 * 250000 / 256
@@ -82,22 +82,5 @@ void delay_ms_T1(uint16_t time_ms) {
             break; 
         }
     }
-    return;
-}
-//old T2 delay used to test brightness function 
-void delay_ms(uint16_t time_ms) {
-    PR2 = 1 * time_ms;      // PR2 coefficient: 1 ~= 0.001 * 250000 / 256
-    TMR2 = 0;
-    
-    T2CONbits.TON = 1;
-    
-    // Idle until timer 2 interrupt or valid input detected
-    while (T2CONbits.TON == 1) {
-        Idle();
-        if (check_IO_finished()) { 
-            break; 
-        }
-    }
-    
     return;
 }

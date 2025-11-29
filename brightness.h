@@ -1,9 +1,9 @@
 /*
  * File Name: brightness.h
- * Assignment: Assignment 4
+ * Assignment: Project 2
  * Lab Section: B02
  * Completed by: Stephen Ravelo, Aaron Lauang, Alexa Gonzalez
- * Submission Date: November 7, 2025
+ * Submission Date: December 1, 2025
  */
 
 #ifndef brightness_H 
@@ -14,8 +14,6 @@
 // global variables
 extern volatile uint16_t CN_event;
 extern volatile uint16_t adc_value;
-extern volatile uint8_t adc_changed;
-extern volatile uint8_t curLED;
 
 void setBrightness(void);
 

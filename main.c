@@ -78,6 +78,7 @@ int main(void) {
 
     timerInit();
     IOinit();
+    ADCinit();
     
     IPC4bits.CNIP = 6;
     IFS1bits.CNIF = 0;
@@ -119,16 +120,9 @@ int main(void) {
                 break;
             case STATE_ON_LED1:
                 Disp2String("STATE ON LED1\n");
-                curLED = 0;
-                adc_changed = 1; //enable brightness
                 while(_state == STATE_ON_LED1) {
-                    // TODO: add variable brightness
-                    do_ADC();
-                    if (adc_changed) {
-                        setBrightness();
-                    }
-                    adc_changed = 0; //reset flag
-                    //Disp2String("Main\n");
+
+                    setBrightness();
                     
                     if (CN_event) {
                         IOcheck();
@@ -154,15 +148,10 @@ int main(void) {
                 break;
             case STATE_ON_LED2:
                 Disp2String("STATE ON LED2\n");
-                curLED = 1;
-                adc_changed = 1; //enable brightness
                 while(_state == STATE_ON_LED2) {
-                    // TODO: add variable brightness
-                    do_ADC();
-                    if (adc_changed) {
-                        setBrightness();
-                    }
-                    adc_changed = 0;
+                    
+                    setBrightness();
+
                     if (CN_event) {
                         IOcheck();
                         if (_PB1_long) {
@@ -188,9 +177,16 @@ int main(void) {
             case STATE_ON_BLINKING_LED1:
                 Disp2String("STATE ON BLINKING LED 1\n");
                 while(_state == STATE_ON_BLINKING_LED1) {
-                    // TODO: add variable brightness
-                    _LATB9 ^= 1;
-                    delay_ms(500);
+                    
+                    for (int i=0;i<20;i++) {
+                        setBrightness();
+                        if (CN_event) { break; }
+                    }
+                    if (!CN_event) {
+                        _LATB9 = 0;
+                        delay_ms(500);
+                    }
+                    
                     if (CN_event) {
                         IOcheck();
                         if (_PB1_long) {
@@ -216,9 +212,16 @@ int main(void) {
             case STATE_ON_BLINKING_LED2:
                 Disp2String("STATE ON BLINKING LED 2\n");
                 while(_state == STATE_ON_BLINKING_LED2) {
-                    // TODO: add variable brightness
-                    _LATA6 ^= 1;
-                    delay_ms(500);
+                    
+                    for (int i=0;i<20;i++) {
+                        setBrightness();
+                        if (CN_event) { break; }
+                    }
+                    if (!CN_event) {
+                        _LATA6 = 0;
+                        delay_ms(500);
+                    }
+                    
                     if (CN_event) {
                         IOcheck();
                         if (_PB1_long) {
@@ -310,18 +313,3 @@ void __attribute__((interrupt, no_auto_psv)) _CNInterrupt(void){
     
     CN_event = 1;
 }
-
-void __attribute__((interrupt, no_auto_psv)) _ADC1Interrupt(void)
-{
-    //Disp2String("ON ISR");
-    IFS0bits.AD1IF = 0;   // clean ADC interruption flag
- 
-    static uint16_t prev = 0;
-    adc_value = ADC1BUF0;    //read buffer digital output ADC1BUF0 
-    uint16_t diff = (adc_value > prev) ? (adc_value - prev) : (prev - adc_value);
-    if (diff >= 40) {
-        adc_changed = 1;     //mark that the value changed
-        prev = adc_value;    
-    }
-}
-

@@ -9,18 +9,16 @@
 #include <p24F16KA101.h>
 #include "ADC.h"
 
-/*
- * Configures ADC and returns buffer
- */
-uint16_t do_ADC(void) {
-    uint16_t ADCvalue; // 16 bit register used to hold ADC converted digital output ADC1BUF0
+uint16_t _AD1_interrupt = 1;
+
+void ADCinit() {
     /* ------------- ADC INITIALIZATION ------------------*/
     // Configure ADC by setting bits in AD1CON1 register
     AD1CON1bits.ADSIDL = 0;
     AD1CON1bits.FORM = 0b00;
     AD1CON1bits.SSRC = 0b111; //set auto convert mode
     AD1CON1bits.ASAM = 0;
-    IEC0bits.AD1IE = 1;    // Enable ADC1 interrupt
+    IEC0bits.AD1IE = 0;    // Enable ADC1 interrupt
     IFS0bits.AD1IF = 0;    // reset flag
             
     AD1CON2bits.VCFG = 0b000; // Selects AVDD, AVSS (supply voltage to PIC) as Vref
@@ -39,6 +37,13 @@ uint16_t do_ADC(void) {
     AD1CHSbits.CH0SA = 0b1100;
     AD1PCFGbits.PCFG12 = 0;
     AD1CSSLbits.CSSL12 = 0;
+}
+
+/*
+ * Configures ADC and returns buffer
+ */
+uint16_t do_ADC(void) {
+    uint16_t ADCvalue; // 16 bit register used to hold ADC converted digital output ADC1BUF0
             
     /* ------------- ADC SAMPLING AND CONVERSION ------------------*/
     AD1CON1bits.ADON = 1; // turn on ADC module
