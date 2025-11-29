@@ -57,12 +57,16 @@
 #include "ADC.h"
 #include "IOs.h"
 #include "timer.h"
+#include "brightness.h"
 
 /**
  * You might find it useful to add your own #defines to improve readability here
  */
 
 uint16_t CN_event;
+volatile uint16_t adc_value = 0;
+volatile uint8_t adc_changed = 1;
+volatile uint8_t curLED = 0;
 
 int main(void) {
     
@@ -78,14 +82,14 @@ int main(void) {
     IPC4bits.CNIP = 6;
     IFS1bits.CNIF = 0;
     IEC1bits.CNIE = 1;
+    IPC3bits.AD1IP = 5; //set priority for ADC interrupt   
     
     /* Let's set up our UART */    
     InitUART2();
     
     _state = STATE_OFF;
     CN_event = 0;
-    toggle_transmit = 0;
-    
+   
 //    uint16_t ADC1_val = do_ADC();
 //    uint16_t ADC1_last = ADC1_val + 16;
     
@@ -94,6 +98,7 @@ int main(void) {
         switch(_state) {
             case STATE_OFF:
                 T3CONbits.TON ^= 0;
+                Disp2String("STATE OFF\n");
                 while(_state == STATE_OFF) {
                     Idle();
                     delay_ms(50);
@@ -117,10 +122,16 @@ int main(void) {
                 }
                 break;
             case STATE_ON_LED1:
+                Disp2String("STATE ON LED1\n");
                 while(_state == STATE_ON_LED1) {
                     // TODO: add variable brightness
-                    _LATB9 = 1;
-                    delay_ms(500);
+                    do_ADC();
+                    if (adc_changed) {
+                        setBrightness();
+                    }
+                    adc_changed = 0;
+                    //Disp2String("Main\n");
+                    
                     if (CN_event) {
                         IOcheck();
                         if (_PB1_long) {
@@ -144,10 +155,13 @@ int main(void) {
                 }
                 break;
             case STATE_ON_LED2:
+                Disp2String("STATE ON LED2\n");
                 while(_state == STATE_ON_LED2) {
                     // TODO: add variable brightness
-                    _LATA6 = 1;
-                    delay_ms(500);
+                    do_ADC();
+                    if (adc_changed) {
+                        setBrightness();
+                    }
                     if (CN_event) {
                         IOcheck();
                         if (_PB1_long) {
@@ -171,6 +185,7 @@ int main(void) {
                 }
                 break;
             case STATE_ON_BLINKING_LED1:
+                Disp2String("STATE ON BLINKING LED 1\n");
                 while(_state == STATE_ON_BLINKING_LED1) {
                     // TODO: add variable brightness
                     _LATB9 ^= 1;
@@ -198,6 +213,7 @@ int main(void) {
                 }
                 break;
             case STATE_ON_BLINKING_LED2:
+                Disp2String("STATE ON BLINKING LED 2\n");
                 while(_state == STATE_ON_BLINKING_LED2) {
                     // TODO: add variable brightness
                     _LATA6 ^= 1;
@@ -225,6 +241,7 @@ int main(void) {
                 }
                 break;
             case STATE_OFF_BLINKING_LED1:
+                Disp2String("STATE OFF BLINKING LED 1\n");
                 while(_state == STATE_OFF_BLINKING_LED1) {
                     _LATB9 ^= 1;
                     delay_ms(500);
@@ -244,6 +261,7 @@ int main(void) {
                 }
                 break;
             case STATE_OFF_BLINKING_LED2:
+                Disp2String("STATE OFF BLINKING LED 2\n");
                 while(_state == STATE_OFF_BLINKING_LED2) {
                     _LATA6 ^= 1;
                     delay_ms(500);
@@ -291,3 +309,25 @@ void __attribute__((interrupt, no_auto_psv)) _CNInterrupt(void){
     
     CN_event = 1;
 }
+
+void __attribute__((interrupt, no_auto_psv)) _ADC1Interrupt(void)
+{
+    //Disp2String("ON ISR");
+    IFS0bits.AD1IF = 0;   // clean ADC interruption flag
+ 
+    static uint16_t prev = 0;
+    adc_value = ADC1BUF0;    //read buffer digital output ADC1BUF0 
+    //Disp2String("adc_value antes de if: ");
+    //Disp2Dec(adc_value);
+    //Disp2String("\n");
+    
+    uint16_t diff = (adc_value > prev) ? (adc_value - prev) : (prev - adc_value);
+    if (diff >= 40) {
+        adc_changed = 1;     //mark that the value changed
+        prev = adc_value;    
+        //Disp2String("adc_value despues de if: ");
+        //Disp2Dec(adc_value);
+        //Disp2String("\n");
+    }
+}
+

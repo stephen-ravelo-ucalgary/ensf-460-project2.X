@@ -7,7 +7,6 @@
  */
 
 #include <p24F16KA101.h>
-
 #include "ADC.h"
 
 /*
@@ -19,8 +18,10 @@ uint16_t do_ADC(void) {
     // Configure ADC by setting bits in AD1CON1 register
     AD1CON1bits.ADSIDL = 0;
     AD1CON1bits.FORM = 0b00;
-    AD1CON1bits.SSRC = 0b111;
+    AD1CON1bits.SSRC = 0b111; //set auto convert mode
     AD1CON1bits.ASAM = 0;
+    IEC0bits.AD1IE = 1;    // Enable ADC1 interrupt
+    IFS0bits.AD1IF = 0;    // reset flag
             
     AD1CON2bits.VCFG = 0b000; // Selects AVDD, AVSS (supply voltage to PIC) as Vref
     // Configure ADC by setting bits in AD1CON2
