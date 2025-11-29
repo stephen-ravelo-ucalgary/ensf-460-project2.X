@@ -48,7 +48,7 @@ void IOcheck() {
     if (PORTBbits.RB7 == 0 && PORTBbits.RB4 == 1 && PORTAbits.RA4 == 1) {
         while (PORTBbits.RB7 == 0 && PORTBbits.RB4 == 1 && PORTAbits.RA4 == 1) {
             if (count == 60) {
-                _curLED ^= 1;
+                _curLED ^= 1; //curLED = 0 --> led 1, curLED = 1 --> led 2
                 _PB1_long = 1;
                 break;
             }

@@ -7,12 +7,23 @@
  */
 
 #include "timer.h"
+#include "IOs.h"
+#include "UART2.h"
 
 uint16_t _skip_delay = 0;
 
 uint16_t _T3_flag = 0;
 
 void timerInit() {
+    // TMR1 config - duty cycle 
+    T1CONbits.TCKPS = 3;    // set prescalar to 256
+    T1CONbits.TCS = 0;
+    T1CONbits.TGATE = 0;
+    T1CONbits.TSIDL = 0;
+    IPC0bits.T1IP = 2;
+    IFS0bits.T1IF = 0;
+    IEC0bits.T1IE = 1;
+    
     // TMR2 config
     T2CONbits.T32 = 0;
     T2CONbits.TCKPS = 3;    // set prescalar to 256
@@ -55,5 +66,21 @@ void delay_ms(uint16_t time_ms) {
         }
     }
     
+    return;
+}
+
+void delay_ms_T1(uint16_t time_ms) {
+    PR1 = 1 * time_ms;      // PR1 coefficient: 1 ~= 0.001 * 250000 / 256
+    TMR1 = 0;
+
+    T1CONbits.TON = 1;
+    
+    // Idle until timer 1 interrupt or valid input detected
+    while (T1CONbits.TON == 1) {
+        Idle();
+        if (check_IO_finished()) { 
+            break; 
+        }
+    }
     return;
 }

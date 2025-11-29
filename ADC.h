@@ -11,6 +11,8 @@
 
 #include "UART2.h"
 
+extern uint16_t _AD1_interrupt;
+
 uint16_t do_ADC(void);
 void read_ADC();
 

@@ -57,12 +57,16 @@
 #include "ADC.h"
 #include "IOs.h"
 #include "timer.h"
+#include "brightness.h"
 
 /**
  * You might find it useful to add your own #defines to improve readability here
  */
 
-uint16_t CN_event;
+volatile uint16_t CN_event = 0;
+volatile uint16_t adc_value = 0;
+volatile uint8_t adc_changed = 1;
+volatile uint8_t curLED = 0;
 
 int main(void) {
     
@@ -74,10 +78,12 @@ int main(void) {
 
     timerInit();
     IOinit();
+    ADCinit();
     
     IPC4bits.CNIP = 6;
     IFS1bits.CNIF = 0;
     IEC1bits.CNIE = 1;
+    IPC3bits.AD1IP = 5; //set priority for ADC interrupt   
     
     /* Let's set up our UART */    
     InitUART2();
@@ -116,11 +122,11 @@ int main(void) {
                 }
                 break;
             case STATE_ON_LED1:
+                Disp2String("STATE ON LED1\n");
                 while(_state == STATE_ON_LED1) {
-                    // TODO: add variable brightness
-                    _LATB9 = 1;
-                    Idle();
-                    delay_ms(50);
+
+                    setBrightness();
+                    
                     if (CN_event) {
                         IOcheck();
                         if (_PB1_long) {
@@ -149,11 +155,11 @@ int main(void) {
                 }
                 break;
             case STATE_ON_LED2:
+                Disp2String("STATE ON LED2\n");
                 while(_state == STATE_ON_LED2) {
-                    // TODO: add variable brightness
-                    _LATA6 = 1;
-                    Idle();
-                    delay_ms(50);
+                    
+                    setBrightness();
+
                     if (CN_event) {
                         IOcheck();
                         if (_PB1_long) {
@@ -182,10 +188,18 @@ int main(void) {
                 }
                 break;
             case STATE_ON_BLINKING_LED1:
+                Disp2String("STATE ON BLINKING LED 1\n");
                 while(_state == STATE_ON_BLINKING_LED1) {
-                    // TODO: add variable brightness
-                    _LATB9 ^= 1;
-                    delay_ms(500);
+                    
+                    for (int i=0;i<20;i++) {
+                        setBrightness();
+                        if (CN_event) { break; }
+                    }
+                    if (!CN_event) {
+                        _LATB9 = 0;
+                        delay_ms(500);
+                    }
+                    
                     if (CN_event) {
                         IOcheck();
                         if (_PB1_long) {
@@ -209,10 +223,18 @@ int main(void) {
                 }
                 break;
             case STATE_ON_BLINKING_LED2:
+                Disp2String("STATE ON BLINKING LED 2\n");
                 while(_state == STATE_ON_BLINKING_LED2) {
-                    // TODO: add variable brightness
-                    _LATA6 ^= 1;
-                    delay_ms(500);
+                    
+                    for (int i=0;i<20;i++) {
+                        setBrightness();
+                        if (CN_event) { break; }
+                    }
+                    if (!CN_event) {
+                        _LATA6 = 0;
+                        delay_ms(500);
+                    }
+                    
                     if (CN_event) {
                         IOcheck();
                         if (_PB1_long) {
@@ -236,6 +258,7 @@ int main(void) {
                 }
                 break;
             case STATE_OFF_BLINKING_LED1:
+                Disp2String("STATE OFF BLINKING LED 1\n");
                 while(_state == STATE_OFF_BLINKING_LED1) {
                     _LATB9 ^= 1;
                     delay_ms(500);
@@ -255,6 +278,7 @@ int main(void) {
                 }
                 break;
             case STATE_OFF_BLINKING_LED2:
+                Disp2String("STATE OFF BLINKING LED 2\n");
                 while(_state == STATE_OFF_BLINKING_LED2) {
                     _LATA6 ^= 1;
                     delay_ms(500);
