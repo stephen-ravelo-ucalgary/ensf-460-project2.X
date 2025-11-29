@@ -18,19 +18,12 @@ void setBrightness(void) {
     
     while(!adc_changed){ //no adc value update
         do_ADC();
-        //Disp2String("adc_changed: ");
-        //Disp2Dec(adc_changed);
-        //Disp2String("\n");
-        //Disp2String("On brightness func\n");
         if (dutyC_ms > 0) {
             if(curLED == 0)
             _LATB9 = 1;
             else
             _LATA6 = 1;
             delay_ms(dutyC_ms);
-            //Disp2String("adc_changed: ");
-            //Disp2Dec(adc_changed);
-            //Disp2String("\n");
             if (adc_changed) break;
 
             if(curLED == 0)

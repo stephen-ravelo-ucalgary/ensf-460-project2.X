@@ -89,9 +89,6 @@ int main(void) {
     
     _state = STATE_OFF;
     CN_event = 0;
-   
-//    uint16_t ADC1_val = do_ADC();
-//    uint16_t ADC1_last = ADC1_val + 16;
     
     // Main loop
     while(1) {
@@ -317,17 +314,10 @@ void __attribute__((interrupt, no_auto_psv)) _ADC1Interrupt(void)
  
     static uint16_t prev = 0;
     adc_value = ADC1BUF0;    //read buffer digital output ADC1BUF0 
-    //Disp2String("adc_value antes de if: ");
-    //Disp2Dec(adc_value);
-    //Disp2String("\n");
-    
     uint16_t diff = (adc_value > prev) ? (adc_value - prev) : (prev - adc_value);
     if (diff >= 40) {
         adc_changed = 1;     //mark that the value changed
         prev = adc_value;    
-        //Disp2String("adc_value despues de if: ");
-        //Disp2Dec(adc_value);
-        //Disp2String("\n");
     }
 }
 
