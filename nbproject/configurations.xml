@@ -46,7 +46,7 @@
         <platformTool>snap</platformTool>
         <languageToolchain>XC16</languageToolchain>
         <languageToolchainVersion>2.10</languageToolchainVersion>
-        <platform>3</platform>
+        <platform>4</platform>
       </toolsSet>
       <packs>
         <pack name="PIC24F-KA-KL-KM_DFP" vendor="Microchip" version="1.5.253"/>

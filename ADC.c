@@ -1,15 +1,14 @@
 /*
  * File Name: ADC.c
- * Assignment: Assignment 4
+ * Assignment: Project 2
  * Lab Section: B02
  * Completed by: Stephen Ravelo, Aaron Lauang, Alexa Gonzalez
- * Submission Date: November 7, 2025
+ * Submission Date: December 1, 2025
  */
 
 #include <p24F16KA101.h>
 #include "ADC.h"
 
-uint16_t _AD1_interrupt = 1;
 
 void ADCinit() {
     /* ------------- ADC INITIALIZATION ------------------*/
@@ -56,18 +55,20 @@ uint16_t do_ADC(void) {
     return (ADCvalue); //returns 10 bit ADC output stored in ADC1BIF0 to calling function
 }
 
+
+// REMOVE CODE BELOW
 /*
  * Samples ADC buffer values for approximately 10 seconds.
  * Uses START_READING and STOP_READING messages to trigger sampling in
  * python program.
  * REQUIRES: samples < 100
  */
-void read_ADC(uint16_t samples) {
-    uint16_t delay_time = 10000/samples - samples;
-    Disp2String("START_READING\n");
-    for (int i = 0; i < samples; i++) {
-        Disp2Dec(do_ADC());
-        delay_ms(delay_time);
-    }
-    Disp2String("STOP_READING\n");
-}
+//void read_ADC(uint16_t samples) {
+//    uint16_t delay_time = 10000/samples - samples;
+//    Disp2String("START_READING\n");
+//    for (int i = 0; i < samples; i++) {
+//        Disp2Dec(do_ADC());
+//        delay_ms(delay_time);
+//    }
+//    Disp2String("STOP_READING\n");
+//}

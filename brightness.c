@@ -10,10 +10,13 @@
 #include "IOs.h"
 #include "ADC.h"
 #include "UART2.h"
-//timer 1
+
+uint16_t CN_event;
+uint16_t adc_value = 0;
 
 void setBrightness(void) {
-    uint16_t dutyC_ms = (uint16_t)((do_ADC() * 25) / 1024);
+    adc_value = do_ADC();
+    uint16_t dutyC_ms = (uint16_t)((adc_value * 25) / 1024);
    
     if (dutyC_ms > 0) {
         if(_curLED == 0)

@@ -1,9 +1,9 @@
 /*
  * File Name: main.c
- * Assignment: Assignment 4
+ * Assignment: Project 2
  * Lab Section: B02
  * Completed by: Stephen Ravelo, Aaron Lauang, Alexa Gonzalez
- * Submission Date: November 7, 2025
+ * Submission Date: December 1, 2025
  */
 
 // FBS
@@ -62,11 +62,6 @@
 /**
  * You might find it useful to add your own #defines to improve readability here
  */
-
-volatile uint16_t CN_event = 0;
-volatile uint16_t adc_value = 0;
-volatile uint8_t adc_changed = 1;
-volatile uint8_t curLED = 0;
 
 int main(void) {
     
@@ -142,14 +137,23 @@ int main(void) {
                             _LATB9 = 0;
                         }
                         else if (_PB3_short) {
-                            T3CONbits.TON ^= 1;
+                            if(T3CONbits.TON == 1) {
+                                Disp2String("STOP_READING\n");
+                                T3CONbits.TON ^= 1;
+
+                            }
+                            else {
+                                Disp2String("START_READING\n");
+                                T3CONbits.TON ^= 1;
+                            }
                         }
                         IOclear();
                         CN_event = 0;
                     }
                     
                     if (_T3_flag) {
-                        // TODO: transmit
+                        Disp2Dec(adc_value);
+                        XmitUART2('\n', 1);
                         _T3_flag = 0;
                     }
                 }
@@ -175,14 +179,23 @@ int main(void) {
                             _LATA6 = 0;
                         }
                         else if (_PB3_short) {
-                            T3CONbits.TON ^= 1;
+                            if(T3CONbits.TON == 1) {
+                                Disp2String("STOP_READING\n");
+                                T3CONbits.TON ^= 1;
+
+                            }
+                            else {
+                                Disp2String("START_READING\n");
+                                T3CONbits.TON ^= 1;
+                            }
                         }
                         IOclear();
                         CN_event = 0;
                     }
                     
                     if (_T3_flag) {
-                        // TODO: transmit
+                        Disp2Dec(adc_value);
+                        XmitUART2('\n', 1);
                         _T3_flag = 0;
                     }
                 }
@@ -215,7 +228,15 @@ int main(void) {
                             _LATB9 = 0;
                         }
                         else if (_PB3_short) {
-                            T3CONbits.TON ^= 1;
+                            if(T3CONbits.TON == 1) {
+                                Disp2String("STOP_READING\n");
+                                T3CONbits.TON ^= 1;
+
+                            }
+                            else {
+                                Disp2String("START_READING\n");
+                                T3CONbits.TON ^= 1;
+                            }
                         }
                         IOclear();
                         CN_event = 0;
@@ -250,7 +271,15 @@ int main(void) {
                             _LATA6 = 0;
                         }
                         else if (_PB3_short) {
-                            T3CONbits.TON ^= 1;
+                            if(T3CONbits.TON == 1) {
+                                Disp2String("STOP_READING\n");
+                                T3CONbits.TON ^= 1;
+
+                            }
+                            else {
+                                Disp2String("START_READING\n");
+                                T3CONbits.TON ^= 1;
+                            }
                         }
                         IOclear();
                         CN_event = 0;

@@ -1,9 +1,9 @@
 /*
  * File Name: UART2.c
- * Assignment: Assignment 4
+ * Assignment: Project 2
  * Lab Section: B02
  * Completed by: Stephen Ravelo, Aaron Lauang, Alexa Gonzalez
- * Submission Date: November 7, 2025
+ * Submission Date: December 1, 2025
  */
 
 
@@ -199,7 +199,7 @@ void Disp2Dec(uint16_t Dec_num)
         XmitUART2(rem + 0x30 , 1);
         ctr = ctr + 1;
     }
-    XmitUART2('\n',1);  // new line
+    // XmitUART2('\n',1);  // new line
     // XmitUART2('\r',1);  // carriage return
    
     return;
@@ -218,17 +218,6 @@ void Disp2String(char *str) //Displays String of characters
     }
     // XmitUART2(0x0A,2);  //LF
     // XmitUART2(0x0D,1);  //CR 
-    
-    return;
-}
-
-// Displays number of '*' proportional to displayed x value
-void DispMode0(uint16_t x) {
-    Disp2String("\033[2J\033[1;1HMode 0: ");
-    XmitUART2('*', x / 32 + 1);
-    XmitUART2(' ', 1);
-    Disp2Hex(x);
-    XmitUART2('\n', 1);
     
     return;
 }

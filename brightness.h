@@ -12,8 +12,8 @@
 #include <stdint.h>
 
 // global variables
-extern volatile uint16_t CN_event;
-extern volatile uint16_t adc_value;
+extern uint16_t CN_event;
+extern uint16_t adc_value;
 
 void setBrightness(void);
 
