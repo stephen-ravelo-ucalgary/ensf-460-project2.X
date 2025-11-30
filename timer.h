@@ -17,7 +17,6 @@ extern uint16_t _T3_flag;
 
 void timerInit();
 void delay_ms();
-void delay_ms_T1();
 
 #endif	/* TIMER_H */
 

@@ -54,21 +54,3 @@ uint16_t do_ADC(void) {
     AD1CON1bits.ADON=0; //Turn off ADC, ADC value stored in ADC1BUF0;
     return (ADCvalue); //returns 10 bit ADC output stored in ADC1BIF0 to calling function
 }
-
-
-// REMOVE CODE BELOW
-/*
- * Samples ADC buffer values for approximately 10 seconds.
- * Uses START_READING and STOP_READING messages to trigger sampling in
- * python program.
- * REQUIRES: samples < 100
- */
-//void read_ADC(uint16_t samples) {
-//    uint16_t delay_time = 10000/samples - samples;
-//    Disp2String("START_READING\n");
-//    for (int i = 0; i < samples; i++) {
-//        Disp2Dec(do_ADC());
-//        delay_ms(delay_time);
-//    }
-//    Disp2String("STOP_READING\n");
-//}

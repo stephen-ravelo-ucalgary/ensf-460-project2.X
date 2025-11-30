@@ -13,7 +13,6 @@
 
 void ADCinit();
 uint16_t do_ADC(void);
-void read_ADC();
 
 #endif	/* ADC_H */
 
