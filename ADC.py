@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 
 port_name = '/dev/tty.usbserial-0001' # MacOS
 # port_name = 'COM4'                  # Windows
-baud_rate = 4800
+baud_rate = 9600
 buffer = []
 intensity = []
 sample_times = []
@@ -55,6 +55,8 @@ try:
                             intensity.append(0)
                         sample_times.append(time.time() - start_time)
                 
+                print("Finished sampling")
+
                 # Save data into a CSV file
                 df = pd.DataFrame({
                     'Time (s)': sample_times,
@@ -66,17 +68,21 @@ try:
                 # Output the graphs of ADC reading vs. time, and Intensity vs. time
                 fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(8, 6), sharex=True)
 
-                ax1.plot(sample_times, buffer, 'b-o', label='Buffer')
+                ax1.plot(sample_times, buffer, 'b-', label='Buffer')
                 ax1.set_ylabel('ADC Reading')
                 ax1.set_xlabel('Time (s)')
                 ax1.set_title('ADC Reading (Raw)')
+                ax1.set_ylim([0, 1023])
+                ax1.set_xlim(0)
                 ax1.legend()
                 ax1.grid(True)
 
-                ax2.plot(sample_times, intensity, 'r-o', label='Intensity')
+                ax2.plot(sample_times, intensity, 'r-', label='Intensity')
                 ax2.set_ylabel('Intensity (Duty Cycle %)')
                 ax2.set_xlabel('Time (s)')
                 ax2.set_title('LED Intensity')
+                ax2.set_ylim([0, 100])
+                ax2.set_xlim(0)
                 ax2.legend()
                 ax2.grid(True)
 

@@ -28,13 +28,13 @@ void timerInit() {
     
     // TMR3 config
     T2CONbits.T32 = 0; // operate timer 2 as 16 bit timer
-    T3CONbits.TCKPS = 1; // set prescaler to 1:8
+    T3CONbits.TCKPS = 2; // set prescaler to 1:8
     T3CONbits.TCS = 0; // use internal clock
     T3CONbits.TSIDL = 0; //operate in idle mode
     IPC2bits.T3IP = 2; //7 is highest and 1 is lowest pri.
     IFS0bits.T3IF = 0;
     IEC0bits.T3IE = 1; //enable timer interrupt
-    PR3 = 50000; // set the count value for 0.5 s (or 500 ms)
+    PR3 = 15625; // set the count value for 0.25 s (or 250 ms)
     TMR3 = 0;
     T3CONbits.TON = 0;
 }
