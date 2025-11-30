@@ -54,6 +54,7 @@ void delay_ms(uint16_t time_ms) {
         
         if (_T3_flag) {
             Disp2Dec(adc_value);
+            XmitUART2(_LED_ON + 0x30, 1);
             XmitUART2('\n', 1);
             _T3_flag = 0;
         }

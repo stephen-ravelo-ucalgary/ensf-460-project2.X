@@ -34,6 +34,7 @@ extern uint16_t _PB2_short;
 extern uint16_t _PB3_short;
 
 extern uint16_t _curLED;
+extern uint16_t _LED_ON;
 
 void IOinit();
 void IOcheck();

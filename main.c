@@ -85,14 +85,15 @@ int main(void) {
     
     _state = STATE_OFF;
     CN_event = 0;
-    
-//    uint16_t ADC1_val = do_ADC();
-//    uint16_t ADC1_last = ADC1_val + 16;
-    
+        
     // Main loop
     while(1) {
         switch(_state) {
             case STATE_OFF:
+                if(T3CONbits.TON == 1) {
+                    Disp2String("STOP_READING\n");
+                    T3CONbits.TON ^= 1;
+                }
                 T3CONbits.TON = 0;
                 while(_state == STATE_OFF) {
                     Idle();
@@ -117,9 +118,8 @@ int main(void) {
                 }
                 break;
             case STATE_ON_LED1:
-                Disp2String("STATE ON LED1\n");
                 while(_state == STATE_ON_LED1) {
-
+                    _LED_ON = 1;
                     setBrightness();
                     
                     if (CN_event) {
@@ -153,15 +153,15 @@ int main(void) {
                     
                     if (_T3_flag) {
                         Disp2Dec(adc_value);
+                        XmitUART2(_LED_ON, 1);
                         XmitUART2('\n', 1);
                         _T3_flag = 0;
                     }
                 }
                 break;
             case STATE_ON_LED2:
-                Disp2String("STATE ON LED2\n");
                 while(_state == STATE_ON_LED2) {
-                    
+                    _LED_ON = 1;
                     setBrightness();
 
                     if (CN_event) {
@@ -195,20 +195,24 @@ int main(void) {
                     
                     if (_T3_flag) {
                         Disp2Dec(adc_value);
+                        XmitUART2(_LED_ON, 1);
                         XmitUART2('\n', 1);
+
                         _T3_flag = 0;
                     }
                 }
                 break;
             case STATE_ON_BLINKING_LED1:
-                Disp2String("STATE ON BLINKING LED 1\n");
                 while(_state == STATE_ON_BLINKING_LED1) {
                     
+                    _LED_ON = 1;
                     for (int i=0;i<20;i++) {
                         setBrightness();
                         if (CN_event) { break; }
                     }
+                    _LED_ON = 0;
                     if (!CN_event) {
+                        
                         _LATB9 = 0;
                         delay_ms(500);
                     }
@@ -244,13 +248,13 @@ int main(void) {
                 }
                 break;
             case STATE_ON_BLINKING_LED2:
-                Disp2String("STATE ON BLINKING LED 2\n");
                 while(_state == STATE_ON_BLINKING_LED2) {
-                    
+                    _LED_ON = 1;
                     for (int i=0;i<20;i++) {
                         setBrightness();
                         if (CN_event) { break; }
                     }
+                    _LED_ON = 0;
                     if (!CN_event) {
                         _LATA6 = 0;
                         delay_ms(500);
@@ -287,7 +291,7 @@ int main(void) {
                 }
                 break;
             case STATE_OFF_BLINKING_LED1:
-                Disp2String("STATE OFF BLINKING LED 1\n");
+                T3CONbits.TON = 0;
                 while(_state == STATE_OFF_BLINKING_LED1) {
                     _LATB9 ^= 1;
                     delay_ms(500);
@@ -307,11 +311,12 @@ int main(void) {
                 }
                 break;
             case STATE_OFF_BLINKING_LED2:
-                Disp2String("STATE OFF BLINKING LED 2\n");
+                T3CONbits.TON = 0;
                 while(_state == STATE_OFF_BLINKING_LED2) {
                     _LATA6 ^= 1;
                     delay_ms(500);
                     if (CN_event) {
+                        IOcheck();
                         if (_PB1_short) {
                             _state = STATE_ON_LED2;
                             _LATA6 = 0;
@@ -324,6 +329,7 @@ int main(void) {
                         CN_event = 0;
                     }
                 }
+
                 break;
         }
     }       

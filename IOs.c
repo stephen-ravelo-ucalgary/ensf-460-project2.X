@@ -17,6 +17,7 @@ uint16_t _PB2_short = 0;
 uint16_t _PB3_short = 0;
 
 uint16_t _curLED = 0;
+uint16_t _LED_ON = 0;
 
 // Initialize peripheral IO
 void IOinit() {

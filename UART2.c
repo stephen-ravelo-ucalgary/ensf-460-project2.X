@@ -192,9 +192,9 @@ void Disp2Dec(uint16_t Dec_num)
     uint8_t rem;  //remainder in div by 10
     uint16_t quot; 
     uint8_t ctr = 0;  //counter
-    while(ctr<5)
+    while(ctr<4)
     {
-        quot = Dec_num/(pow(10,(4-ctr)));
+        quot = Dec_num/(pow(10,(3-ctr)));
         rem = quot%10;
         XmitUART2(rem + 0x30 , 1);
         ctr = ctr + 1;

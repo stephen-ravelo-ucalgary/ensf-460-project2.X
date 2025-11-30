@@ -11,7 +11,7 @@
 
 #include "UART2.h"
 
-
+void ADCinit();
 uint16_t do_ADC(void);
 void read_ADC();
 
