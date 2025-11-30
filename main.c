@@ -118,6 +118,7 @@ int main(void) {
                 }
                 break;
             case STATE_ON_LED1:
+                _curLED = 0;
                 while(_state == STATE_ON_LED1) {
                     _LED_ON = 1;
                     setBrightness();
@@ -160,6 +161,7 @@ int main(void) {
                 }
                 break;
             case STATE_ON_LED2:
+                _curLED = 1;
                 while(_state == STATE_ON_LED2) {
                     _LED_ON = 1;
                     setBrightness();
@@ -203,6 +205,7 @@ int main(void) {
                 }
                 break;
             case STATE_ON_BLINKING_LED1:
+                _curLED = 0;
                 while(_state == STATE_ON_BLINKING_LED1) {
                     
                     _LED_ON = 1;
@@ -248,6 +251,7 @@ int main(void) {
                 }
                 break;
             case STATE_ON_BLINKING_LED2:
+                _curLED = 1;
                 while(_state == STATE_ON_BLINKING_LED2) {
                     _LED_ON = 1;
                     for (int i=0;i<20;i++) {
