@@ -48,21 +48,13 @@ try:
                         buffer_data = int(sample_msg[0:4])
                         buffer.append(buffer_data)
 
-                        # 1 is on, 0 is off
+                        # 1 is LED on, 0 is LED off (during LED blinking)
                         if int(sample_msg[4:]) == 1:
                             intensity.append((float(buffer_data) / 1023) * 100)
                         else:
                             intensity.append(0)
                         sample_times.append(time.time() - start_time)
                 
-                # Print buffer, intensity, and time values into the terminal
-                print("Digital ADC Buffer Values:")
-                print(buffer)
-                print("Intensity Values:")
-                print(intensity)
-                print("Sample Times:")
-                print(sample_times)
-
                 # Save data into a CSV file
                 df = pd.DataFrame({
                     'Time (s)': sample_times,
@@ -71,7 +63,7 @@ try:
                 })
                 df.to_csv('Group1.csv', index=False)
 
-                # Output the graphs of buffer vs. time, and Intensity vs. time
+                # Output the graphs of ADC reading vs. time, and Intensity vs. time
                 fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(8, 6), sharex=True)
 
                 ax1.plot(sample_times, buffer, 'b-o', label='Buffer')
