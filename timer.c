@@ -34,13 +34,13 @@ void timerInit() {
     IPC2bits.T3IP = 2; //7 is highest and 1 is lowest pri.
     IFS0bits.T3IF = 0;
     IEC0bits.T3IE = 1; //enable timer interrupt
-    PR3 = 15625; // set the count value for 0.5 s (or 500 ms)
+    PR3 = 50000; // set the count value for 0.5 s (or 500 ms)
     TMR3 = 0;
     T3CONbits.TON = 0;
 }
 
 void delay_ms(uint16_t time_ms) {
-    PR2 = 1 * time_ms;      // PR2 coefficient: 1 ~= 0.001 * 250000 / 256
+    PR2 = 16 * time_ms;      // PR2 coefficient: 1 ~= 0.001 * 250000 / 256
     TMR2 = 0;
     
     T2CONbits.TON = 1;
