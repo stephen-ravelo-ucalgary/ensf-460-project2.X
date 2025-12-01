@@ -78,7 +78,6 @@ int main(void) {
     IPC4bits.CNIP = 6;
     IFS1bits.CNIF = 0;
     IEC1bits.CNIE = 1;
-    IPC3bits.AD1IP = 5; //set priority for ADC interrupt   
     
     /* Let's set up our UART */    
     InitUART2();

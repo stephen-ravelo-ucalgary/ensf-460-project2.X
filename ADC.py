@@ -12,10 +12,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import sys
 
-args = sys.argv[1:]
-
-# port_name = '/dev/tty.usbserial-0001' # MacOS
-port_name = 'COM3'                      # Windows
+port_name = '/dev/tty.usbserial-0001' # MacOS
+# port_name = 'COM3'                      # Windows
 baud_rate = 9600
 buffer = []
 intensity = []
