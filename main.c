@@ -153,7 +153,7 @@ int main(void) {
                     
                     if (_T3_flag) {
                         Disp2Dec(adc_value);
-                        XmitUART2(_LED_ON, 1);
+                        XmitUART2(_LED_ON + 0x30, 1);
                         XmitUART2('\n', 1);
                         _T3_flag = 0;
                     }
@@ -196,9 +196,8 @@ int main(void) {
                     
                     if (_T3_flag) {
                         Disp2Dec(adc_value);
-                        XmitUART2(_LED_ON, 1);
+                        XmitUART2(_LED_ON + 0x30, 1);
                         XmitUART2('\n', 1);
-
                         _T3_flag = 0;
                     }
                 }
